@@ -1,0 +1,31 @@
+---
+# tasks file for geekoops-mysql
+
+- name: Get mysql8 community repos
+  get_url:
+    url: https://repo.mysql.com/mysql80-community-release-sl15-6.noarch.rpm
+    dest: /tmp/
+- name: Add mysql8 community repos
+  zypper:
+    name: '/tmp/mysql80-community-release-sl15-6.noarch.rpm'
+    disable_gpg_check: yes
+    state: latest
+- name: install mysql8 from community repos
+  package:
+    name: mysql-community-server
+    disable_gpg_check: yes
+    update_cache: yes
+    state: latest
+- name: Start and enable systemd service for mysql
+  systemd:
+    name: mysql
+    state: started
+- name: Get mysql temporary password
+  command: awk '/password/{print $NF}' /var/log/mysql/mysqld.log
+  register: sqlpassword
+- name: Add temporary password to .my.conf
+  template:
+    dest: /root/
+    src: .my.cnf
+#    owner: root
+#    group: root

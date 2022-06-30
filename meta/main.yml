@@ -1,0 +1,22 @@
+---
+galaxy_info:
+  author: Teodor Baev
+  role_name: mysql
+  namespace: geekoops
+  description: Configurable mysql setup role
+  company: SUSE
+  issue_tracker_url: https://github.com/GeekOops/geekoops-mysql/issues
+
+  license: license MIT
+
+  min_ansible_version: 2.9
+
+  platforms:
+    - name: opensuse
+      versions:
+        - 15.4
+
+  galaxy_tags:
+    - mysql
+
+dependencies: []
