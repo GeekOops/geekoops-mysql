@@ -1,0 +1,10 @@
+---
+# defaults file for geekoops-mysql
+
+connect_timeout: 30
+default_storage_engine: InnoDB
+innodb_flush_method: fsync
+tmp_table_size: 32M
+max_heap_table_size: 32M
+innodb_buffer_pool_size: 2048M
+thread_cache_size: 16

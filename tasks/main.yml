@@ -25,7 +25,16 @@
   register: sqlpassword
 - name: Add temporary password to .my.conf
   template:
-    dest: /root/
+    dest: /root/.my.cnf
     src: .my.cnf
-#    owner: root
-#    group: root
+- name: Make temporary password permenent
+  command: mysqladmin password "{{ sqlpassword.stdout }}"
+- name: Custom mysql settings
+  template:
+    dest: /etc/my.cnf
+    src: my.cnf
+- name: Restart mysql service
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: mysql
