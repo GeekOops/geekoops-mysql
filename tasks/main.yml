@@ -27,7 +27,7 @@
   template:
     dest: /root/.my.cnf
     src: .my.cnf
-- name: Make temporary password permenent
+- name: Make temporary password permanent
   command: mysqladmin password "{{ sqlpassword.stdout }}"
 - name: Custom mysql settings
   template:
