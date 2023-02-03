@@ -16,25 +16,35 @@
     disable_gpg_check: yes
     update_cache: yes
     state: latest
+- name: Ensure mysql settings are up-to-date
+  template:
+    dest: /etc/my.cnf
+    src: my.cnf
 - name: Start and enable systemd service for mysql
   systemd:
     name: mysql
     state: started
+
+## Apply temporary password for root user ######################################
+
+- name: Check for root user configuration
+  stat:
+    path: /root/.my.cnf
+  register: root_my_cnf
 - name: Get mysql temporary password
   command: awk '/password/{print $NF}' /var/log/mysql/mysqld.log
   register: sqlpassword
-- name: Add temporary password to .my.conf
+  when: not root_my_cnf.stat.exists
+- name: Add temporary password to the root user configuration
   template:
+    src: root_my.cnf
     dest: /root/.my.cnf
-    src: .my.cnf
+  when: not root_my_cnf.stat.exists
 - name: Make temporary password permanent
   command: mysqladmin password "{{ sqlpassword.stdout }}"
-- name: Custom mysql settings
-  template:
-    dest: /etc/my.cnf
-    src: my.cnf
+  when: not root_my_cnf.stat.exists
 - name: Restart mysql service
   systemd:
-    state: restarted
-    daemon_reload: yes
     name: mysql
+    state: restarted
+  when: not root_my_cnf.stat.exists
