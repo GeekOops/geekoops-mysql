@@ -1,0 +1,29 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: leap15_4
+    image: registry.opensuse.org/opensuse/leap:15.4
+    dockerfile: Dockerfile.leap15_4
+    command: ${MOLECULE_DOCKER_COMMAND:-"/usr/sbin/init"}
+    privileged: true
+    cgroupns: host
+    tmpfs:
+      - /run
+      - /tmp
+provisioner:
+  name: ansible
+  inventory:
+    host_vars:
+      leap15_4:
+        connect_timeout: 30
+        default_storage_engine: InnoDB
+        innodb_flush_method: fsync
+        tmp_table_size: 32M
+        max_heap_table_size: 32M
+        innodb_buffer_pool_size: 2048M
+        thread_cache_size: 16
+verifier:
+  name: testinfra

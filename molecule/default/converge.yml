@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include geekoops-mysql"
+      include_role:
+        name: "geekoops-mysql"
+    ## Setup test enviroment
